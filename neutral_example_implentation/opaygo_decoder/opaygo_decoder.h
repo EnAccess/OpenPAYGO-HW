@@ -6,7 +6,7 @@
 #include "opaygo_value_utils.h"
 #include "device_parameters.h"
 
-#define MAX_TOKEN_JUMP 995
+#define MAX_TOKEN_JUMP 50
 
 int GetActivationValueFromToken(uint32_t InputToken, int *LastCount);
 
