@@ -3,6 +3,6 @@
 
 #include <stdio.h>
 
-int getch();
+int getch(void);
 
 #endif

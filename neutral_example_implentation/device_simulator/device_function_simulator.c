@@ -2,12 +2,13 @@
 #include "getch.h"
 
 // Device parameters (to be stored in Flash/EEPROM)
-int ActivationCount = 0;
-bool PAYG_ON = true;
+int TokenCount = 1;
+bool PAYGEnabled = true;
 uint32_t ActiveUntil = 0;
+uint32_t TokenEntryLockedUntil = 0;
 
 // This is just for displaying the activation status in the simulater WaitForTokenEntry function
-extern bool IsActive();
+extern bool IsActive(void);
 
 void BlinkRedLED(int NumberOfBlinks) {
     printf("\nRed LED Blinked %d times!\n", NumberOfBlinks);
@@ -36,15 +37,17 @@ int GetKeyPressed() {
 
 
 void LoadActivationVariables() {
-    // We load Activation Count
-    // We load PAYG ON
+    // We load TokenCount
+    // We load PAYGEnabled
     // We load ActiveUntil
+    // We load TokenEntryLockedUntil
 }
 
 void StoreActivationVariables() {
-    // We store Activation Count
-    // We store PAYG ON
+    // We store TokenCount
+    // We store PAYGEnabled
     // We store ActiveUntil
+    // We store TokenEntryLockedUntil
 }
 
 uint32_t GetTimeInSeconds() {

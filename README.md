@@ -1,4 +1,4 @@
-# EnAccess OPAYGO v1.0 - Hardware
+# EnAccess OPAYGO v2.0 - Hardware
 
 **This project is supported by the EnAccess Foundation (https://enaccess.org/)**
 

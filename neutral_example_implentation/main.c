@@ -1,19 +1,31 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
+#include "device_parameters.h"
 #include "device_simulator/device_function_simulator.h"
 #include "device_payg_logic.h"
 #include "opaygo_decoder/opaygo_decoder.h"
 
-uint32_t WaitForTokenEntry() {
-    uint32_t TempToken = 0;
+#ifdef RESTRICTED_DIGIT_SET_MODE
+#define TOKEN_LENGTH 15
+#else
+#define TOKEN_LENGTH 9
+#endif
+
+uint64_t WaitForTokenEntry() {
+    uint64_t TempToken = 0;
     bool NoToken = true;
     int LastKey;
     
     while(NoToken) {
         LastKey = GetKeyPressed();
         if(LastKey == STAR_KEY) {
-            NoToken = false;
+            if(TokenEntryAllowed()) {
+                NoToken = false;
+            } else {
+                BlinkRedLED(1);
+                printf("\nToken entry locked for %d seconds", TokenEntryLockedUntil-GetTimeInSeconds());
+            }
         } else if(LastKey == HASH_KEY) {
             if(IsActive()) {
                 BlinkGreenLED(1);
@@ -23,12 +35,13 @@ uint32_t WaitForTokenEntry() {
             }
         }
     }
-    for(int i=0; i<9; i++) {
+    for(int i=0; i<TOKEN_LENGTH; i++) {
         // We add the last key pressed to the token (as integer) if needed
-        TempToken += GetKeyPressed()*pow(10, 8-i);
+        TempToken += GetKeyPressed()*pow(10, (TOKEN_LENGTH-1)-i);
     }
     return TempToken;
 }
+
 
 // Main PAYG loop
 int main(int argc, const char * argv[]) {
@@ -37,19 +50,19 @@ int main(int argc, const char * argv[]) {
     
     LoadActivationVariables(); // We load the activation variables
     
-    uint32_t InputToken;
+    uint64_t InputToken;
     while(1) {
         // We wait for a token to be entered
         InputToken = WaitForTokenEntry();
-        printf("\n(Token entered: %u)", InputToken);
+        printf("\n(Token entered: %llu)", InputToken);
         
         // We get the activation value from the token
-        int TokenValue = GetActivationValueFromToken(InputToken, &ActivationCount);
+        int TokenValue = GetActivationValueFromToken(InputToken, &TokenCount);
         printf("\n(Activation Value from Token: %d)", TokenValue); // Activation Value found in the token
-        printf("\n(Count: %d)\n", ActivationCount); // Count found in the token
+        printf("\n(Count: %d)\n", TokenCount); // Count found in the token
         
         // We update the PAYG mode (ON or OFF) and the PAYG timer based on the activation value
-        UpdateDeviceStatusFromTokenValue(TokenValue);
+        UpdateDeviceStatusFromTokenValue(TokenValue, TokenCount);
     }
     
     return 0;
