@@ -4,7 +4,10 @@
 #define TIME_DIVIDER 1
 //#define RESTRICTED_DIGIT_SET_MODE
 
-static const char SECRET_KEY[] = {0xa2, 0x9a, 0xb8, 0x2e, 0xdc, 0x5f, 0xbb, 0xc4, 0x1e, 0xc9, 0x53, 0xf, 0x6d, 0xac, 0x86, 0xb1};
-static uint32_t StartingCode = 123456789;
+#ifdef RESTRICTED_DIGIT_SET_MODE
+#define TOKEN_LENGTH 15
+#else
+#define TOKEN_LENGTH 9
+#endif
 
 #endif

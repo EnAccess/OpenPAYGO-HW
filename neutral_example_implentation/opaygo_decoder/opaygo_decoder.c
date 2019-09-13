@@ -1,14 +1,14 @@
 #include "opaygo_decoder.h"
 
 
-int GetActivationValueFromToken(uint64_t InputToken, int *LastCount) {
+int GetActivationValueFromToken(uint64_t InputToken, uint16_t *LastCount, uint32_t StartingCode, char SECRET_KEY[16]) {
     
 #ifdef RESTRICTED_DIGIT_SET_MODE
     InputToken = ConvertFromFourDigitToken(InputToken);
 #endif
     
     int StartingCodeBase = GetTokenBase(StartingCode);
-    int TokenBase = GetTokenBase(InputToken);
+    int TokenBase = GetTokenBase((uint32_t)InputToken);
     uint32_t CurrentToken = PutBaseInToken(StartingCode, TokenBase);
     uint32_t MaskedToken;
     int MaxCountTry;
@@ -27,7 +27,7 @@ int GetActivationValueFromToken(uint64_t InputToken, int *LastCount) {
             *LastCount = Count;
             return Value;
         }
-        CurrentToken = GenerateOPAYGOToken(CurrentToken);
+        CurrentToken = GenerateOPAYGOToken(CurrentToken, SECRET_KEY);
     }
     
     return -1;

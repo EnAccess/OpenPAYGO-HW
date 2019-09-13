@@ -1,6 +1,5 @@
 #include "opaygo_core.h"
 #include "siphash.h"
-#include "device_parameters.h"
 
 
 uint32_t extractBits(uint32_t source, unsigned from, unsigned to)
@@ -27,7 +26,7 @@ uint32_t ConvertHashToToken(uint64_t this_hash) {
     return result;
 }
 
-uint32_t GenerateOPAYGOToken(uint32_t LastToken) {
+uint32_t GenerateOPAYGOToken(uint32_t LastToken, char SECRET_KEY[16]) {
     uint8_t a[8];
     
     a[0] = LastToken >> 24;

@@ -6,12 +6,6 @@
 #include "device_payg_logic.h"
 #include "opaygo_decoder/opaygo_decoder.h"
 
-#ifdef RESTRICTED_DIGIT_SET_MODE
-#define TOKEN_LENGTH 15
-#else
-#define TOKEN_LENGTH 9
-#endif
-
 uint64_t WaitForTokenEntry() {
     uint64_t TempToken = 0;
     bool NoToken = true;
@@ -57,7 +51,7 @@ int main(int argc, const char * argv[]) {
         printf("\n(Token entered: %llu)", InputToken);
         
         // We get the activation value from the token
-        int TokenValue = GetActivationValueFromToken(InputToken, &TokenCount);
+        int TokenValue = GetActivationValueFromToken(InputToken, &TokenCount, StartingCode, SECRET_KEY);
         printf("\n(Activation Value from Token: %d)", TokenValue); // Activation Value found in the token
         printf("\n(Count: %d)\n", TokenCount); // Count found in the token
         

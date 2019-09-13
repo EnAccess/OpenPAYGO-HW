@@ -9,10 +9,12 @@
 #define HASH_KEY -2
 
 // Device parameters (to be stored in Flash/EEPROM)
-extern int TokenCount;
+extern uint16_t TokenCount;
 extern bool PAYGEnabled;
 extern uint32_t ActiveUntil;
 extern uint32_t TokenEntryLockedUntil;
+extern char SECRET_KEY[16];
+extern uint32_t StartingCode;
 
 void BlinkRedLED(int NumberOfBlinks);
 void BlinkGreenLED(int NumberOfBlinks);
