@@ -7,8 +7,8 @@ int GetActivationValueFromToken(uint64_t InputToken, uint16_t *LastCount, uint32
     InputToken = ConvertFromFourDigitToken(InputToken);
 #endif
     
-    int StartingCodeBase = GetTokenBase(StartingCode);
-    int TokenBase = GetTokenBase((uint32_t)InputToken);
+    uint16_t StartingCodeBase = GetTokenBase(StartingCode);
+    uint16_t TokenBase = GetTokenBase((uint32_t)InputToken);
     uint32_t CurrentToken = PutBaseInToken(StartingCode, TokenBase);
     uint32_t MaskedToken;
     int MaxCountTry;
