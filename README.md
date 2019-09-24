@@ -6,9 +6,11 @@
 
 - Neutral C Implentation of OPAYGO
 
-- Schematic of Arduino/Nucleo/other based implementation (TODO)
+- Arduino Firmware Implementation
 
-- Full functioning firmware for such implementation (TODO)
+- Schematic for 3 different Arduino based implementation (TODO)
+
+- Tutorial on how to add to a simple product (TODO)
 
 ## Documentation
 
