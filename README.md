@@ -1,4 +1,4 @@
-# EnAccess OpenPAYGO Token v2.0 - Hardware
+# OpenPAYGO Token v2.0 - Hardware
 
 **This project is supported by the EnAccess Foundation (https://enaccess.org/)**
 
