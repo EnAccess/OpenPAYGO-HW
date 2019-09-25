@@ -1,18 +1,31 @@
 // --- PRE PROCESSER
 
 /*
- * Modifications added to v3.1:
- * Activation removed from EEPROM [DONE]
- * Use the updated library [DONE]
- * Description onglet removed [DONE]
- * New onglet EEPROM [DONE]
- * si batt est détachée, activation à 0 ==> enlevée de l'EEPROM [DONE]
+ * Modifications added to v3.2:
+ * Time management with RTC module [DONE]
+ * Time management with Arduino [DONE]
+ * SET TIME mode [DONE]
+ * ADD TIME mode [DONE]
+ * Loop cleant [DONE]
+ * Store paygDisabled in EEPROM [DONE]
+ * Added functionality: if paygDisabled = 1, but a valid code is typed, paygDisabled = 0 in RAM and EEPROM [DONE]
 */
 
-// CHOOSE INTERFACE
+// CHOOSE ONE INTERFACE (comment others)
 //#define KEYBOARD_MODE
 #define IR_RECEIVER_MODE
 //#define MEMBRANE_KEYPAD_MODE
+
+// CHOOSE ONE TIME MODE (comment the other)
+//#define SET_TIME
+#define ADD_TIME
+
+// CHOOSE ONE TIME MANAGER (comment the other)
+//#define ARDUINO_TIME_MANAGER
+#define RTC_MODULE_TIME_MANAGER
+
+// CHOOSE TEST MODE (decomment it to use the Serial Communication)
+#define TEST_MODE
 
 
 // SPECIFIC
@@ -47,6 +60,11 @@
   bool keyWaitingToBeRead = false;
 #endif
 
+#ifdef RTC_MODULE_TIME_MANAGER
+  #include "RTClib.h"
+  RTC_DS1307 rtc;
+  #define ACTIVE_UNTIL_NVRAM_ADDRESS 0 // 56 bytes address from 0 to 55 in the NVRAM
+#endif
 
 
 // LIBRARIES
@@ -61,12 +79,19 @@
 
 // VALUES
 #define BLINK_PERIOD 250 // in ms, actually half period
+// EEPROM
 #define SERIAL_COUNT_ADDRESS 0
 #define SERIAL_NUMBER_ADDRESS 1
 #define STARTING_CODE_ADDRESS 5
 #define SECRET_KEY_ADDRESS 9
 #define LAST_COUNT_ADDRESS 25
-#define ACTIVATION_VALUE_ADDRESS 27
+#define LAST_TIME_STAMP_ADDRESS 27
+#define PAYG_DISABLED_ADDRESS 31
+//Time management
+#define PIN_ACTIVATION 10
+#define EEPROM_TIME_UPDATE_PERIOD 3600 //in sec, the EEPROM is updated every 1hour for the time => 43 800 times in 5 years, max for Arduino EEPROM is 100 000 times (estimation)
+#define MAX_TIME_WITHOUT_UPDATE 60 //in sec
+// Other
 #define SERIAL_NUMBER_TYPE 1
 #define STARTING_CODE_TYPE 2
 #define SECRET_KEY_TYPE 3
@@ -75,16 +100,22 @@
 #define NON_ACCEPTED_CHAR -2
 
 
-// VARIABLES FUNCTION FACTORY SETUP
+// VARIABLES FACTORY SETUP
 byte serialCount = 0; // a boolean was enough, but booleans are stored in bytes...
 uint32_t serialNumber = 0;
 uint32_t startingCode = 0;
 unsigned char secretKey[16] = {0};
 
 
-// VARIABLES FUNCTION TOKEN ENTRY
-uint32_t activationCode = 0; // used to be uint64_t
+// VARIABLES TOKEN ENTRY
+uint32_t activationCode = 0;
 uint16_t lastCount = 0;
 bool abortedToken = false;
 char incomingChar1 = 0;
-int activationValue = 0;
+int activationValue = 0; // if the user unplug the power and plug it back, activation days will disappear
+
+// VARIABLES ACTIVATION & TIME
+uint32_t activeUntil = 0;
+uint32_t nowInSeconds; // uint32_t can go up to 133 years
+uint32_t lastTimeStampInSeconds = 0;
+uint8_t paygDisabled = 0; //uint8_t because we need to store a byte in EEPROM

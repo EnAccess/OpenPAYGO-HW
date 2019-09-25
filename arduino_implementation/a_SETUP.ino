@@ -3,7 +3,9 @@
 
 void setup()
 {
-  Serial.begin(9600);
+  #ifdef TEST_MODE
+    Serial.begin(9600);
+  #endif
   delay(1000);
   initializeInterface();
   pinMode(LED_BUILTIN, OUTPUT);
@@ -19,4 +21,8 @@ void setup()
     ; // wait for serial port to connect
     }
   }
+  pinMode(PIN_ACTIVATION, OUTPUT);
+  digitalWrite(PIN_ACTIVATION, LOW);
+  initializeTime();
+  initializeActivation();
 }
