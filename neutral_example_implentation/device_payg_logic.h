@@ -1,11 +1,7 @@
 #ifndef device_payg_logic_h
 #define device_payg_logic_h
 
-#include <stdio.h>
-#include <math.h>
-#include "device_simulator/device_function_simulator.h"
-#include "opaygo_decoder/opaygo_core.h"
-#include "device_parameters.h"
+#include <stdbool.h>
 
 void UpdateDeviceStatusFromTokenValue(int TokenValue, int ActivationCount);
 void UpdateInvalidTokenWaitingPeriod(void);

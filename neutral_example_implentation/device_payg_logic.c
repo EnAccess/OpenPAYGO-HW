@@ -1,4 +1,10 @@
 #include "device_payg_logic.h"
+
+#include "device_function_simulator.h"
+#include "opaygo_decoder/opaygo_decoder.h"
+#include "device_parameters.h"
+
+#include <stdio.h>
 #include <math.h>
 
 int InvalidTokenCount = 0;
