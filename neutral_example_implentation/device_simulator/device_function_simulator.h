@@ -2,6 +2,7 @@
 #define device_function_simulator_h
 
 #include <stdio.h>
+#include <stdint.h>
 #include <stdbool.h>
 #include <time.h>
 

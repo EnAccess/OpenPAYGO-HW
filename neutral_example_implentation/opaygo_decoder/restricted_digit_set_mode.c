@@ -1,4 +1,5 @@
 #include "restricted_digit_set_mode.h"
+#include <stdint.h>
 
 void StoreNBitsInArray(bool* BooleanArray, uint64_t Data, uint8_t NumberOfBits, uint8_t BufferStartBit)
 {
@@ -22,12 +23,12 @@ uint32_t ConvertFromFourDigitToken(uint64_t FourDigitToken) {
     // For other lengths the code needs to be adapted
     bool TokenBooleanArray[30] = {0};
     uint8_t ThisDigit;
-    
+
     for(int i = 0; i < 15; i++) {
         ThisDigit = (FourDigitToken % 10) - 1;
         StoreNBitsInArray(TokenBooleanArray, ThisDigit, 2, (14-i)*2);
         FourDigitToken /= 10;
     }
-    
+
     return GetINTFromBooleanArray(TokenBooleanArray, 0, 30);
 }

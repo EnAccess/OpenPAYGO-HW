@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 uint32_t ConvertFromFourDigitToken(uint64_t FourDigitToken);
 

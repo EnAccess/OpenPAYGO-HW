@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "device_simulator/device_function_simulator.h"
-#include "opaygo_core.h"
+#include "opaygo_decoder/opaygo_core.h"
 #include "device_parameters.h"
 
 void UpdateDeviceStatusFromTokenValue(int TokenValue, int ActivationCount);

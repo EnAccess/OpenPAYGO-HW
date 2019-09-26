@@ -2,6 +2,7 @@
 #define opaygo_value_utils_h
 
 #include <stdio.h>
+#include <stdint.h>
 
 int DecodeBase(int StartingCodeBase, int TokenBase);
 int GetTokenBase(uint32_t Token);

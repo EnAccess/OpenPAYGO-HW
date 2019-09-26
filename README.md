@@ -4,13 +4,20 @@
 
 ## Content
 
-- Neutral C Implentation of OPAYGO
+### Neutral C Implentation of OPAYGO
 
-- Arduino Firmware Implementation
+Compile and run simulator in Linux environment with the following commands in folder `neutral_example_implementation`:
 
-- Schematic for 3 different Arduino based implementation (TODO)
+```bash
+make
+./opaygo.bin
+```
 
-- Tutorial on how to add to a simple product (TODO)
+### Arduino Firmware Implementation
+
+### Schematic for 3 different Arduino based implementation (TODO)
+
+### Tutorial on how to add to a simple product (TODO)
 
 ## Documentation
 

@@ -2,6 +2,7 @@
 #define opaygo_core_h
 
 #include <stdio.h>
+#include <stdint.h>
 
 #define MAX_ACTIVATION_VALUE 995
 #define PAYG_DISABLE_VALUE 998
