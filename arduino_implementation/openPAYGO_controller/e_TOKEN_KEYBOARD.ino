@@ -22,7 +22,7 @@ char getKeyPressed()
   char incomingByte = keyboard.read();    // read the incoming byte
   Serial.print("incoming byte = ");
   Serial.println(incomingByte);
-  if isAccepted(incomingByte){
+  if (isAccepted(incomingByte)){
     return(incomingByte);
   }
   Serial.println("Char not accepted");
@@ -36,10 +36,14 @@ uint32_t getCode(){
    * get the coming 9 keys pressed and return the corresponding 9 digits number, as a uint32_t
    * if '*' is pressed during the process, the operation is cancelled and the function returns -1
    */
+  uint32_t t0 = millis(); 
   int codeArray[9] = {0};
   int i;
   for (i = 0; i < 9; i++){
     while (keyboard.available() == 0){
+      if ((millis()-t0) > MAX_TIME_TOKEN_ENTRY*1000){
+        return(EXCEEDED_TIME_TOKEN);
+      }
     }
     char a = getKeyPressed();
     if (a == '*'){

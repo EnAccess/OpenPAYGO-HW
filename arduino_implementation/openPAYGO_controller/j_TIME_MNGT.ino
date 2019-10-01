@@ -10,14 +10,11 @@ void handleActivationTime(){
   nowInSeconds = getTimeInSeconds();
   getDataEeprom(); // updates the lastTimeStamp
   
-  if (nowInSeconds > lastTimeStampInSeconds + EEPROM_TIME_UPDATE_PERIOD){
+  if (nowInSeconds > lastTimeStampInSeconds + EEPROM_TIME_UPDATE_PERIOD){ // to update the timeStamp 
     storeTimeStampEEPROM(nowInSeconds);
   }
   
   if (isActive() == 0){
-    digitalWrite(PIN_ACTIVATION, LOW);
-  }
-  else if (lastTimeStampNotMatching(nowInSeconds)){
     digitalWrite(PIN_ACTIVATION, LOW);
   }
 }
@@ -49,33 +46,29 @@ bool lastTimeStampNotMatching(uint32_t nowInSeconds)
 
 
 void addTime(int activationValue) {
-  uint32_t now = getTimeInSeconds();
-  int numberOfSecondsToActivate = (activationValue*24*60*60);
-  
-  if(activeUntil < now) {
-      activeUntil = now;
+  uint32_t nowInSeconds = getTimeInSeconds();
+  uint32_t numberOfSecondsToActivate = (uint32_t)activationValue*24*60*60/TIME_DIVIDER;
+  if(activeUntil < nowInSeconds) {
+      activeUntil = nowInSeconds;
   }  
   activeUntil += numberOfSecondsToActivate; // We add the number of days (converted in seconds for to compare to our RTC time)
 
   #ifdef RTC_MODULE_TIME_MANAGER
-    uint8_t arrayBytes[4];
-    convertUint32ToUint8Array(activeUntil, arrayBytes);
-    rtc.writenvram(ACTIVE_UNTIL_NVRAM_ADDRESS, arrayBytes, 4);
+    storeUint32InNvram(activeUntil, ACTIVE_UNTIL_NVRAM_ADDRESS); // store ActiveUntil in the NVRAM of the RTC module
   #endif
 }
 
 
 void setTime(int activationValue) {
-  uint32_t now = getTimeInSeconds();
-  int numberOfSecondsToActivate = (activationValue*24*60*60);
-  activeUntil = now + numberOfSecondsToActivate; // We set the number of days (converted in seconds for to compare to our RTC time)
+  uint32_t nowInSeconds = getTimeInSeconds();
+  uint32_t numberOfSecondsToActivate = (uint32_t)activationValue*24*60*60/TIME_DIVIDER;
+  activeUntil = nowInSeconds + numberOfSecondsToActivate; // We set the number of days (converted in seconds for to compare to our RTC time)
   
   #ifdef RTC_MODULE_TIME_MANAGER
-    uint8_t arrayBytes[4];
-    convertUint32ToUint8Array(activeUntil, arrayBytes);
-    rtc.writenvram(ACTIVE_UNTIL_NVRAM_ADDRESS, arrayBytes, 4);
+    storeUint32InNvram(activeUntil, ACTIVE_UNTIL_NVRAM_ADDRESS); // store ActiveUntil in the NVRAM of the RTC module
   #endif
 }
+
 
 void initializeActivation()
 /*
@@ -84,14 +77,22 @@ void initializeActivation()
  * If no RTC module, ActiveUntil is set to 0 by default
  */
 {
+  pinMode(PIN_ACTIVATION, OUTPUT);
+  digitalWrite(PIN_ACTIVATION, LOW); // LOW by default
   EEPROM.get(PAYG_DISABLED_ADDRESS, paygDisabled);
   if (paygDisabled == 1){ // careful, EEPROM is set as 0xFF by default
     digitalWrite(PIN_ACTIVATION, HIGH);
+    #ifdef RTC_MODULE_TIME_MANAGER
+      activeUntil = readUint32FromNvram(ACTIVE_UNTIL_NVRAM_ADDRESS); // update activeUntil from NVRAM, in case the payg_disabled was a mistake, so that the activation is not lost
+    #endif
   }
   else{
     paygDisabled = 0;
     #ifdef RTC_MODULE_TIME_MANAGER
-      updateActiveUntilFromNvram();
+      activeUntil = readUint32FromNvram(ACTIVE_UNTIL_NVRAM_ADDRESS); // update activeUntil from NVRAM, 0 if it is the first setup
+      if (activeUntil > getTimeInSeconds()){
+        digitalWrite(PIN_ACTIVATION, HIGH);
+      }
     #endif
   }
 }

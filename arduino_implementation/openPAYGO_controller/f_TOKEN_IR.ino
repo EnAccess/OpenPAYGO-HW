@@ -37,14 +37,14 @@ char getKeyPressed()
   default: incomingByte = '/'; // for other button
   }
 
-  Serial.print("incoming byte = ");
-  Serial.println(incomingByte);
+  Serial.print("incoming byte = "); // decomment DEBUG_MODE to print this
+  Serial.println(incomingByte); // decomment DEBUG_MODE to print this
   irrecv.resume(); // receive the next value
   delay(100);
   if (isAccepted(incomingByte)){
     return(incomingByte);
   }
-  Serial.println("Char not accepted");
+  Serial.println("Char not accepted"); // decomment DEBUG_MODE to print this
   return(NON_ACCEPTED_CHAR);
 }
 
@@ -55,11 +55,15 @@ uint32_t getCode(){
    * get the coming 9 keys pressed and return the corresponding 9 digits number, as a uint32_t
    * if '*' is pressed during the process, the operation is cancelled and the function returns -1
    */
+  uint32_t t0 = millis();
   int codeArray[9] = {0};
   int i;
   char a;
   for (i = 0; i < 9; i++){
     while (irrecv.decode(&results) == 0){
+      if ((millis()-t0) > MAX_TIME_TOKEN_ENTRY*1000){
+        return(EXCEEDED_TIME_TOKEN);
+      }
     }
     // check if it can be normalized and remove from specific functions
     if (irrecv.decode(&results)){

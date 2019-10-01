@@ -15,26 +15,32 @@ bool isAccepted(char incomingByte)
   return(0);
 }
 
+
+
 void handleIncomingKeypress() {
+  char incomingChar;
   if (abortedToken == false){ // abortedToken = true if a code was aborted ('*' pressed in the middle), to avoid the user to use "**" that would bring confusion
-    incomingChar1 = getKeyPressed(); // reads every char until there is a '*' detected
+    incomingChar = getKeyPressed(); // reads every char until there is a '*' detected
   }
   
-  if (incomingChar1 == '*' || abortedToken == true) {
+  if (incomingChar == '*' || abortedToken == true) {
     abortedToken = false; // reset abortedToken
     activationCode = getCode();
-    Serial.print("activation code = ");
+    Serial.print("activation code = "); // will only be printed if DEBUG_MODE is uncommented
     Serial.println(activationCode);
     if (activationCode == STAR_KEY_PRESSED){
       abortedToken = true;// '*' was pressed again before the code was entirely entered (probably an error was made), the loop should start from scratch
     }
     else{
       int activationValue = GetActivationValueFromToken((uint64_t)activationCode, &lastCount, startingCode, secretKey);
-      Serial.print("Activation value = ");
+      handleActivation(activationValue);
+      Serial.print("Activation value = "); // will only be printed if DEBUG_MODE is uncommented
       Serial.println(activationValue);
       Serial.print("count = ");
       Serial.println(lastCount);
-      handleActivation(activationValue);
+      uint32_t activeUntilInDays = activeUntil/3600/24;
+      Serial.print("Active until in days = ");
+      Serial.println(activeUntilInDays);
     }
   }
 }
@@ -60,7 +66,7 @@ void handleActivation(int activationValue){
       blinkLed(5);
     }
     else {
-      enablePaygInEeprom();
+      enablePaygInEeprom(); // in case it was previously disabled
       #ifdef ADD_TIME
         addTime(activationValue);
       #endif
