@@ -7,6 +7,6 @@
 #define PAYG_DISABLE_VALUE 998
 #define COUNTER_SYNC_VALUE 999
 
-uint32_t GenerateOPAYGOToken(uint32_t LastToken, char SECRET_KEY[16]);
+uint32_t GenerateOPAYGOToken(uint32_t LastToken, unsigned char SECRET_KEY[16]);
 
 #endif
