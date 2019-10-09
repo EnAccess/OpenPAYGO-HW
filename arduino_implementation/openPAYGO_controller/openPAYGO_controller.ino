@@ -1,15 +1,6 @@
-// --- PRE PROCESSER
+// --- CONFIGURATION
 
-/*
- * Fix activeUntil calculation [DONE]
- * When cheating is spotted (time doesn't match the timeStamp stored in EEPROM), a nbDisconnections variable in the EEPROM is incremented [DONE]
- * MAX_TIME_TOKEN_ENTRY added: abort the token entry once the time is passed, to make sure it is not assimilated to a disconnection [DONE]
- * TIME_DIVIDER feature added [DONE]
- * RTC module functions added [DONE]
- * SERIAL_MODE added for tests [DONE]
-*/
-
-// CHOOSE ONE INTERFACE (comment others)
+// CHOOSE ONE INTERFACE (comment the others)
 //#define KEYBOARD_MODE
 //#define IR_RECEIVER_MODE
 #define MEMBRANE_KEYPAD_MODE
@@ -27,8 +18,10 @@
 //#define DEBUG_MODE
 
 // CHOOSE TIME DIVIDER
-#define TIME_DIVIDER 255
+#define TIME_DIVIDER 1
 
+
+// --- LIBRARY IMPORTS
 
 // SPECIFIC
 #ifdef KEYBOARD_MODE
@@ -71,8 +64,9 @@
 #endif
 
 
-// LIBRARIES
-#include "opaygo_decoder.h"
+extern "C" {
+  #include <opaygo_decoder.h>
+}
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -80,8 +74,7 @@
 #include <string.h>
 
 
-
-// General
+// CONSTANTS
 #define BLINK_PERIOD 250 // in ms, actually half period
 // EEPROM
 #define SERIAL_COUNT_ADDRESS 0
@@ -108,20 +101,19 @@
 #define MAX_TIME_TOKEN_ENTRY 20 // in sec
 
 
-// VARIABLES FACTORY SETUP
+// GLOBAL VARIABLES FACTORY SETUP
 byte serialCount = 0; // a boolean was enough, but booleans are stored in bytes...
 uint32_t serialNumber = 0;
 uint32_t startingCode = 0;
 unsigned char secretKey[16] = {0};
 
-
-// VARIABLES TOKEN ENTRY
+// GLOBAL VARIABLES TOKEN ENTRY
 uint32_t activationCode = 0;
 uint16_t lastCount = 0;
 bool abortedToken = false;
 int activationValue = 0; // if the user unplug the power and plug it back, activation days will disappear
 
-// VARIABLES ACTIVATION & TIME
+// GLOBAL VARIABLES ACTIVATION & TIME
 uint32_t activeUntil = 0;
 uint32_t nowInSeconds; // uint32_t can go up to 133 years
 uint32_t lastTimeStampInSeconds = 0;

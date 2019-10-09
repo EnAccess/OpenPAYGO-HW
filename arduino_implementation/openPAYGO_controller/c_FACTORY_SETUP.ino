@@ -22,7 +22,6 @@ void handleIncomingChar() {
 }
 
 
-
 char getByteSent()
 /*
  * returns the char sent through UART (this function forces to put the key in a char, good practice)
