@@ -6,9 +6,7 @@
 
 - Neutral C Implentation of OPAYGO
 
-- Arduino Firmware Implementation
-
-- Schematic for 3 different Arduino based implementation (TODO)
+- Arduino Firmware Implementation with 3 different input modes (IR Remote, Membrane Keypad, USB Keypad)
 
 - Tutorial on how to add to a simple product (TODO)
 
