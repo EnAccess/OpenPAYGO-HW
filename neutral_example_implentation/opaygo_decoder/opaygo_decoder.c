@@ -12,18 +12,21 @@ int GetActivationValueFromToken(uint64_t InputToken, uint16_t *LastCount, uint32
     uint32_t CurrentToken = PutBaseInToken(StartingCode, TokenBase);
     uint32_t MaskedToken;
     int MaxCountTry;
+    int MinCountTry;
     
     int Value = DecodeBase(StartingCodeBase, TokenBase);
     
     if(Value == COUNTER_SYNC_VALUE) {
         MaxCountTry = *LastCount + MAX_TOKEN_JUMP_COUNTER_SYNC;
+        MinCountTry = *LastCount - MAX_TOKEN_JUMP;
     } else {
         MaxCountTry = *LastCount + MAX_TOKEN_JUMP;
+        MinCountTry = *LastCount;
     }
     
     for (int Count=0; Count <= MaxCountTry; Count++) {
         MaskedToken = PutBaseInToken(CurrentToken, TokenBase);
-        if(MaskedToken == InputToken && Count > *LastCount) {
+        if(MaskedToken == InputToken && Count > MinCountTry) {
             *LastCount = Count;
             return Value;
         }

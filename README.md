@@ -17,3 +17,9 @@
 **General Documentation:** https://docs.google.com/document/d/1n-B12shLFXy8j8mSEevNOp-GPPTGvR3iTD_TgnvfzW0/edit?usp=sharing
 
 **Example Code Documentation:** https://docs.google.com/document/d/1UF-QDFtpeDzXiT1pBEaWC8tcMjcnfBA0uyZs62UaNx4/edit?usp=sharing
+
+## Changelog
+
+2019-09-09: 
+- Fixed a bug in the neutral device example implementation that would prevent the value of the counter to be stored immediately after a counter sync call. 
+- Changed the min. Token jump to match the value recommended in the documentation. 

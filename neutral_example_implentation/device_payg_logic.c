@@ -12,7 +12,6 @@ void UpdateDeviceStatusFromTokenValue(int TokenValue, int ActivationCount) {
             BlinkGreenLED(3); // We blink green twice to show that the token is good
         } else if(TokenValue == PAYG_DISABLE_VALUE) {
             PAYGEnabled = false;
-            StoreActivationVariables();
             BlinkGreenLED(5); // We blink green twice to show that the device is active forever
         } else {
             PAYGEnabled = true;
@@ -21,9 +20,9 @@ void UpdateDeviceStatusFromTokenValue(int TokenValue, int ActivationCount) {
             } else {
                 AddTime(TokenValue);
             }
-            StoreActivationVariables();
             BlinkGreenLED(2); // We blink green twice to show that the token is good
         }
+        StoreActivationVariables(); // We store in every case
     }
 }
 
