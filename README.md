@@ -21,5 +21,6 @@
 ## Changelog
 
 2019-09-09: 
+- Updated example Arduino code documentation
 - Fixed a bug in the neutral device example implementation that would prevent the value of the counter to be stored immediately after a counter sync call. 
 - Changed the min. Token jump to match the value recommended in the documentation. 
