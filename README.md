@@ -1,20 +1,20 @@
-# EnAccess OPAYGO v2.0 - Hardware
+# OpenPAYGO Token v2.0 - Hardware Examples Repository
 
 **This project is supported by the EnAccess Foundation (https://enaccess.org/)**
-
-**Note: Project name subject to change**
 
 ## Content
 
 - Neutral C Implentation of OPAYGO
 
-- Schematic of Arduino/Nucleo/other based implementation (TODO)
+- Arduino Firmware Implementation
 
-- Full functioning firmware for such implementation (TODO)
+- Schematic for 3 different Arduino based implementation (TODO)
+
+- Tutorial on how to add to a simple product (TODO)
 
 ## Documentation
 
-**General Documentation:** https://docs.google.com/document/d/1n-B12shLFXy8j8mSEevNOp-GPPTGvR3iTD_TgnvfzW0/edit?usp=sharing
+**See the main repository of the project here for the full documentation:** https://github.com/EnAccess/OpenPAYGO
 
 **Example Code Documentation:** https://docs.google.com/document/d/1UF-QDFtpeDzXiT1pBEaWC8tcMjcnfBA0uyZs62UaNx4/edit?usp=sharing
 

@@ -9,6 +9,6 @@
 #define MAX_TOKEN_JUMP 30
 #define MAX_TOKEN_JUMP_COUNTER_SYNC 100
 
-int GetActivationValueFromToken(uint64_t InputToken, uint16_t *LastCount, uint32_t StartingCode, char SECRET_KEY[16]);
+int GetActivationValueFromToken(uint64_t InputToken, uint16_t *LastCount, uint32_t StartingCode, unsigned char SECRET_KEY[16]);
 
-#endif 
+#endif
