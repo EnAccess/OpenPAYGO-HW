@@ -2,21 +2,25 @@
 
 This project is supported by the EnAccess Foundation (https://enaccess.org/)
 
+
 ## Content
 
 - Neutral C Implentation of OPAYGO
 
 - Arduino Firmware Implementation with 3 different input modes (IR Remote, Membrane Keypad, USB Keypad)
 
-- Tutorial on how to add to a simple product (TODO)
+- Tutorial on how to add to a simple product (with an Arduino example board)
+
 
 ## Documentation
 
 **See the main repository of the project here for the full documentation:** https://github.com/EnAccess/OpenPAYGO
 
+
 ## NOTE 
 If you have pulled or downloaded this implementation before the official OpenPAYGO Token release on the 10th of October 2019, 
 please make sure to update to the latest version before using in production. 
+
 
 ## Changelog
 
