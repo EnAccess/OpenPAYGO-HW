@@ -1,6 +1,11 @@
 #ifndef device_function_simulator_h
 #define device_function_simulator_h
 
+#if (defined(__APPLE__) && defined(__MACH__)) /* MacOS X Framework build */
+    #include <sys/types.h>
+#endif
+
+#include <stdint.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <time.h>

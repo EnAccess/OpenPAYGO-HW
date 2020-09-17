@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include "device_parameters.h"
-#include "device_simulator/device_function_simulator.h"
+#include "unix_device/device_functions.h"
 #include "device_payg_logic.h"
 #include "opaygo_decoder/opaygo_decoder.h"
 

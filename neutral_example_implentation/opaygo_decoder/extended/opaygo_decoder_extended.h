@@ -9,6 +9,11 @@
 #ifndef opaygo_decoder_extended_h
 #define opaygo_decoder_extended_h
 
+#if (defined(__APPLE__) && defined(__MACH__)) /* MacOS X Framework build */
+    #include <sys/types.h>
+#endif
+
+#include <stdint.h>
 #include <stdio.h>
 #include "opaygo_core_extended.h"
 #include "opaygo_decoder.h"

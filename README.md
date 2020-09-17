@@ -1,15 +1,25 @@
-# OpenPAYGO Token v2.0 - Hardware Examples Repository
+# OpenPAYGO Token v2 - Hardware Examples Repository
 
 This project is supported by the EnAccess Foundation (https://enaccess.org/)
 
 
 ## Content
 
-- Neutral C Implentation of OPAYGO
+### Neutral C Implentation of OPAYGO
 
-- Arduino Firmware Implementation with 3 different input modes (IR Remote, Membrane Keypad, USB Keypad)
+This implementation is meant to be easy to port to other devices. 
+It also includes a "unix_device" folder that shows an example of the implementation for the Unix platform as a CLI tool. 
+To port it to another device, simply implement the functions found in that UNIX example (BlinkRedLED, GetPressedKey, etc.) for your target system and replace the import. 
 
-- Tutorial on how to add to a simple product (with an Arduino example board)
+### Arduino Firmware Implementation
+ 
+This implementation with 3 different input modes (IR Remote, Membrane Keypad, USB Keypad) and supports factory setup via UART. 
+
+A small tool is also provided for the factory setup. 
+
+### Tutorial on how to add to a simple product
+
+These tutorials are based on the Arduino firmware implementation show how to wire a full product. 
 
 
 ## Documentation
@@ -23,6 +33,11 @@ please make sure to update to the latest version before using in production.
 
 
 ## Changelog
+
+2020-09-17: v2.1 release
+- Updated the examples to add the unordered token entry feature that was introduced with v2.1 on 2019-11-15 as part of the main repository. 
+- Fixed compatibility with OSX for the Neutral C Implementation
+- Included Makefile in the Neutral C Implementation for ease of use (thanks @martinjaeger)
 
 2019-09-09: v2.0 release
 - Updated example Arduino code documentation
