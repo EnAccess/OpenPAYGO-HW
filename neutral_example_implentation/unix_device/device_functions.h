@@ -10,6 +10,8 @@
 #include <stdbool.h>
 #include <time.h>
 
+#define DEBUG
+
 #define STAR_KEY -1
 #define HASH_KEY -2
 
