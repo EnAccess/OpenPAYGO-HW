@@ -55,7 +55,7 @@ int main(int argc, const char * argv[]) {
         // We wait for a token to be entered
         InputToken = WaitForTokenEntry();
         // We get the activation value from the token
-        int TokenValue = GetActivationValueFromToken(InputToken, &TokenCount, StartingCode, SECRET_KEY);
+        int TokenValue = GetActivationValueFromToken(InputToken, &TokenCount, &UsedTokens, StartingCode, SECRET_KEY);
 
         #ifdef DEBUG
         printf("\n(Token entered: %llu)", InputToken);

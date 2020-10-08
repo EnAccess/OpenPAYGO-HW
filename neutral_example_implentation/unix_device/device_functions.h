@@ -17,6 +17,7 @@
 
 // Device parameters (to be stored in Flash/EEPROM)
 extern uint16_t TokenCount;
+extern uint16_t UsedTokens;
 extern bool PAYGEnabled;
 extern uint32_t ActiveUntil;
 extern uint32_t TokenEntryLockedUntil;
