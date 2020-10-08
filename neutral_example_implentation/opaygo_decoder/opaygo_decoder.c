@@ -53,6 +53,9 @@ bool IsCountValid(int Count, uint16_t LastCount, int Value, uint16_t UsedCounts)
 
 bool IsInUsedCounts(int Count, uint16_t LastCount, uint16_t UsedCounts) {
     uint16_t RelativeCount = LastCount - Count - 1;
+    if(Count % 2 && Count <= LastCount) {
+        return true;
+    }
     if(CHECK_BIT(UsedCounts, RelativeCount)) {
         return true;
     }
@@ -61,17 +64,13 @@ bool IsInUsedCounts(int Count, uint16_t LastCount, uint16_t UsedCounts) {
 
 void MarkCountAsUsed(int Count, uint16_t *LastCount, uint16_t *UsedCounts, int Value) {
     uint16_t NewUsedCount = 0;
-    uint16_t RelativeCount = 0;
     if(Count % 2 || Value == COUNTER_SYNC_VALUE) {
-        if(Count <= *LastCount) {
-            RelativeCount = *LastCount - Count - 1;
-        }
-        for(int i=RelativeCount; i < MAX_UNUSED_OLDER_TOKENS; i++) {
+        for(int i=0; i < MAX_UNUSED_OLDER_TOKENS; i++) {
             *UsedCounts = SET_BIT(*UsedCounts, i, 1);
         }
     } else {
         if(Count > *LastCount) {
-            RelativeCount = Count - *LastCount;
+            uint16_t RelativeCount = Count - *LastCount;
             if(RelativeCount > MAX_UNUSED_OLDER_TOKENS) {
                 RelativeCount = MAX_UNUSED_OLDER_TOKENS;
             } else {
