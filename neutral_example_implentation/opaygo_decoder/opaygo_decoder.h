@@ -11,9 +11,9 @@
 #include "opaygo_value_utils.h"
 #include "restricted_digit_set_mode.h"
 
-#define MAX_TOKEN_JUMP 40 // This is a jump in count so up to twice as large as the number of tokens
+#define MAX_TOKEN_JUMP 48 // This is a jump in count so up to twice as large as the number of tokens of the same type
 #define MAX_TOKEN_JUMP_COUNTER_SYNC 100 // This is a jump in count so up to twice as large as the number of tokens
-#define MAX_UNUSED_OLDER_TOKENS 10 // Maximum of 15
+#define MAX_UNUSED_OLDER_TOKENS 16 // Maximum of 16 (8 tokens of the same type)
 
 #define CHECK_BIT(variable, position) ((variable) & (1<<(position)))
 #define SET_BIT(variable,position,value) (variable & ~(1<<position)) | (value<<position)
