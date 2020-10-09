@@ -49,22 +49,23 @@ int main(int argc, const char * argv[]) {
     #endif
 
     LoadActivationVariables(); // We load the activation variables
-    
+
     uint64_t InputToken;
+    TokenData Output;
     while(1) {
         // We wait for a token to be entered
         InputToken = WaitForTokenEntry();
         // We get the activation value from the token
-        int TokenValue = GetActivationValueFromToken(InputToken, &TokenCount, &UsedTokens, StartingCode, SECRET_KEY);
+        Output = GetDataFromToken(InputToken, &TokenCount, &UsedTokens, StartingCode, SECRET_KEY);
 
         #ifdef DEBUG
         printf("\n(Token entered: %llu)", InputToken);
-        printf("\n(Activation Value from Token: %d)", TokenValue); // Activation Value found in the token
-        printf("\n(Count: %d)\n", TokenCount); // Count found in the token
+        printf("\n(Activation Value from Token: %d)", Output.Value); // Activation Value found in the token
+        printf("\n(Count: %d)\n", Output.Count); // Count found in the token
         #endif
         
         // We update the PAYG mode (ON or OFF) and the PAYG timer based on the activation value
-        UpdateDeviceStatusFromTokenValue(TokenValue, TokenCount);
+        UpdateDeviceStatusFromTokenValue(Output.Value, Output.Count);
     }
     
     return 0;
