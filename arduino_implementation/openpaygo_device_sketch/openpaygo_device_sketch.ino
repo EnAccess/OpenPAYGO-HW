@@ -3,19 +3,15 @@
 // CHOOSE ONE INTERFACE (comment the others)
 //#define KEYBOARD_MODE
 //#define IR_RECEIVER_MODE
-#define MEMBRANE_KEYPAD_MODE
-//#define SERIAL_MODE
-
-// CHOOSE ONE TIME MODE (comment the other)
-//#define SET_TIME
-#define ADD_TIME
+//#define MEMBRANE_KEYPAD_MODE
+#define SERIAL_MODE
 
 // CHOOSE ONE TIME MANAGER (comment the other)
-//#define ARDUINO_TIME_MANAGER
-#define RTC_MODULE_TIME_MANAGER
+#define ARDUINO_TIME_MANAGER
+//#define RTC_MODULE_TIME_MANAGER
 
 // CHOOSE DEBUG MODE (decomment it to use the Serial Communication)
-//#define DEBUG_MODE
+// #define DEBUG_MODE
 
 // CHOOSE TIME DIVIDER
 #define TIME_DIVIDER 1
@@ -70,14 +66,14 @@ extern "C" {
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <EEPROM.h>  // https://www.carnetdumaker.net/articles/stocker-des-donnees-en-memoire-eeprom-avec-une-carte-arduino-genuino/
+#include <EEPROM.h>
 #include <string.h>
 
 
 // CONSTANTS
 #define BLINK_PERIOD 250 // in ms, actually half period
 // EEPROM
-#define SERIAL_COUNT_ADDRESS 0
+#define SETUP_COMPLETE_ADDRESS 0
 #define SERIAL_NUMBER_ADDRESS 1
 #define STARTING_CODE_ADDRESS 5
 #define SECRET_KEY_ADDRESS 9
@@ -85,16 +81,17 @@ extern "C" {
 #define LAST_TIME_STAMP_ADDRESS 27
 #define PAYG_DISABLED_ADDRESS 31
 #define NB_DISCONNECTIONS_ADDRESS 32
+#define USED_TOKENS_ADDRESS 33
 //Time management
 #define PIN_ACTIVATION 10
 #define EEPROM_TIME_UPDATE_PERIOD 100 // put it back to 3600 //in sec, the EEPROM is updated every 1hour for the time => 43 800 times in 5 years, max for Arduino EEPROM is 100 000 times (estimation)
 #define MAX_TIME_WITHOUT_UPDATE 25 // put it back to, //in sec, make sure it is more than MAX_TIME_TOKEN_ENTRY
 // Factory Setup
+#define SETUP_COMPLETE_MAGIC_NUMBER 174
 #define SERIAL_NUMBER_TYPE 1
 #define STARTING_CODE_TYPE 2
 #define SECRET_KEY_TYPE 3
 // Token Entry
-#define DISABLING_PAYGO_MODE 998
 #define STAR_KEY_PRESSED -1
 #define NON_ACCEPTED_CHAR -2
 #define EXCEEDED_TIME_TOKEN -3
@@ -102,16 +99,16 @@ extern "C" {
 
 
 // GLOBAL VARIABLES FACTORY SETUP
-byte serialCount = 0; // a boolean was enough, but booleans are stored in bytes...
+uint8_t setupComplete = 0;
 uint32_t serialNumber = 0;
 uint32_t startingCode = 0;
 unsigned char secretKey[16] = {0};
 
 // GLOBAL VARIABLES TOKEN ENTRY
-uint32_t activationCode = 0;
+uint32_t inputToken = 0;
 uint16_t lastCount = 0;
+uint16_t usedTokens = 0;
 bool abortedToken = false;
-int activationValue = 0; // if the user unplug the power and plug it back, activation days will disappear
 
 // GLOBAL VARIABLES ACTIVATION & TIME
 uint32_t activeUntil = 0;

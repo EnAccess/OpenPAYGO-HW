@@ -30,11 +30,14 @@ void UpdateInvalidTokenWaitingPeriod() {
     uint32_t Now = GetTimeInSeconds();
     
     // We check that it does not become unbearably long
-    if(InvalidTokenCount > 9) {
-        InvalidTokenCount = 9;
+    if(InvalidTokenCount > 11) {
+        InvalidTokenCount = 11;
     }
-    
-    TokenEntryLockedUntil = Now + pow(2, InvalidTokenCount)*60;
+
+    // We add some forgiveness for the first 2 errors
+    if(InvalidTokenCount > 2) {
+        TokenEntryLockedUntil = Now + pow(2, InvalidTokenCount-2)*60;
+    }
 }
 
 bool TokenEntryAllowed() {

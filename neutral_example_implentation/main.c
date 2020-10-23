@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include "device_parameters.h"
-#include "device_simulator/device_function_simulator.h"
+#include "unix_device/device_functions.h"
 #include "device_payg_logic.h"
 #include "opaygo_decoder/opaygo_decoder.h"
 
@@ -18,12 +18,16 @@ uint64_t WaitForTokenEntry() {
                 NoToken = false;
             } else {
                 BlinkRedLED(1);
+                #ifdef DEBUG
                 printf("\nToken entry locked for %d seconds", TokenEntryLockedUntil-GetTimeInSeconds());
+                #endif
             }
         } else if(LastKey == HASH_KEY) {
             if(IsActive()) {
                 BlinkGreenLED(1);
+                #ifdef DEBUG
                 printf("\nTime Left: %d seconds", ActiveUntil-GetTimeInSeconds());
+                #endif
             } else {
                 BlinkRedLED(1);
             }
@@ -39,24 +43,29 @@ uint64_t WaitForTokenEntry() {
 
 // Main PAYG loop
 int main(int argc, const char * argv[]) {
+    #ifdef DEBUG
     printf("Welcome to the OPAYGO Device Simulator\n");
     printf("We're waiting for the * character to start recording the key presses. \n(You need to press ENTER after the key presses for the simulator to work)\n(Press the '#' key to see the device activation status)\n\n");
-    
+    #endif
+
     LoadActivationVariables(); // We load the activation variables
-    
+
     uint64_t InputToken;
+    TokenData Output;
     while(1) {
         // We wait for a token to be entered
         InputToken = WaitForTokenEntry();
-        printf("\n(Token entered: %llu)", InputToken);
-        
         // We get the activation value from the token
-        int TokenValue = GetActivationValueFromToken(InputToken, &TokenCount, StartingCode, SECRET_KEY);
-        printf("\n(Activation Value from Token: %d)", TokenValue); // Activation Value found in the token
-        printf("\n(Count: %d)\n", TokenCount); // Count found in the token
+        Output = GetDataFromToken(InputToken, &TokenCount, &UsedTokens, StartingCode, SECRET_KEY);
+
+        #ifdef DEBUG
+        printf("\n(Token entered: %llu)", InputToken);
+        printf("\n(Activation Value from Token: %d)", Output.Value); // Activation Value found in the token
+        printf("\n(Count: %d)\n", Output.Count); // Count found in the token
+        #endif
         
         // We update the PAYG mode (ON or OFF) and the PAYG timer based on the activation value
-        UpdateDeviceStatusFromTokenValue(TokenValue, TokenCount);
+        UpdateDeviceStatusFromTokenValue(Output.Value, Output.Count);
     }
     
     return 0;

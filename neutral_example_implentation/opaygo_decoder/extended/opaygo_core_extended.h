@@ -9,6 +9,11 @@
 #ifndef opaygo_core_extended_h
 #define opaygo_core_extended_h
 
+#if (defined(__APPLE__) && defined(__MACH__)) /* MacOS X Framework build */
+    #include <sys/types.h>
+#endif
+
+#include <stdint.h>
 #include <stdio.h>
 
 uint64_t GenerateOPAYGOTokenExtended(uint64_t LastToken, char SECRET_KEY[16]);

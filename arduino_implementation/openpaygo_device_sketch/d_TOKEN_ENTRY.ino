@@ -18,6 +18,7 @@ bool isAccepted(char incomingByte)
 
 
 void handleIncomingKeypress() {
+  TokenData Output;
   char incomingChar;
   if (abortedToken == false){ // abortedToken = true if a code was aborted ('*' pressed in the middle), to avoid the user to use "**" that would bring confusion
     incomingChar = getKeyPressed(); // reads every char until there is a '*' detected
@@ -25,20 +26,20 @@ void handleIncomingKeypress() {
   
   if (incomingChar == '*' || abortedToken == true) {
     abortedToken = false; // reset abortedToken
-    activationCode = getCode();
+    inputToken = getCode();
     Serial.print("activation code = "); // will only be printed if DEBUG_MODE is uncommented
-    Serial.println(activationCode);
-    if (activationCode == STAR_KEY_PRESSED){
+    Serial.println(inputToken);
+    if (inputToken == STAR_KEY_PRESSED) {
       abortedToken = true;// '*' was pressed again before the code was entirely entered (probably an error was made), the loop should start from scratch
-    }
-    else{
-      int activationValue = GetActivationValueFromToken((uint64_t)activationCode, &lastCount, startingCode, secretKey);
-      handleActivation(activationValue);
+    } else {
+      Output = GetDataFromToken((uint64_t)inputToken, &lastCount, &usedTokens, startingCode, secretKey);
+      // We update the PAYG mode (ON or OFF) and the PAYG timer based on the activation value
+      UpdateDeviceStatusFromTokenValue(Output.Value, Output.Count);
       Serial.print("Activation value = "); // will only be printed if DEBUG_MODE is uncommented
-      Serial.println(activationValue);
+      Serial.println(Output.Value);
       Serial.print("count = ");
-      Serial.println(lastCount);
-      uint32_t activeUntilInDays = activeUntil/3600/24;
+      Serial.println(Output.Count);
+      uint32_t activeUntilInDays = round(activeUntil/3600.0f/24.0f);
       Serial.print("Active until in days = ");
       Serial.println(activeUntilInDays);
     }
@@ -46,35 +47,24 @@ void handleIncomingKeypress() {
 }
 
 
-
-void handleActivation(int activationValue){
-  /*
-   * blinks 10 times if code not valid (or already typed)
-   * 5 times if code is PAYG disabled
-   * 2 times if code is valid (including re-enable PAYG for 0)
-   */
-  if (activationValue == -1){
-    blinkLed(10);
-  }
-  else{
-    EEPROM.put(LAST_COUNT_ADDRESS,lastCount);
-    
-    if (activationValue == DISABLING_PAYGO_MODE){
-      paygDisabled = 1;
-      digitalWrite(PIN_ACTIVATION, HIGH);
-      EEPROM.put(PAYG_DISABLED_ADDRESS, paygDisabled);
-      blinkLed(5);
+void UpdateDeviceStatusFromTokenValue(int TokenValue, int ActivationCount) {
+    if(TokenValue == -1) {
+        blinkLed(15);
+    } else {
+        if(TokenValue == COUNTER_SYNC_VALUE) {
+            blinkLed(3); // We blink green twice to show that the token is good
+        } else if(TokenValue == PAYG_DISABLE_VALUE) {
+            paygDisabled = 1;
+            blinkLed(5);
+        } else {
+            paygDisabled = 0;
+            if(ActivationCount % 2) {
+                setTime(TokenValue);
+            } else {
+                addTime(TokenValue);
+            }
+            blinkLed(2);
+        }
+        StoreActivationVariables(); // We store in every case
     }
-    else {
-      enablePaygInEeprom(); // in case it was previously disabled
-      #ifdef ADD_TIME
-        addTime(activationValue);
-      #endif
-      #ifdef SET_TIME
-        setTime(activationValue);
-      #endif
-      digitalWrite(PIN_ACTIVATION, HIGH);
-      blinkLed(2);
-    }
-  }
 }

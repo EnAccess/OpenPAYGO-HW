@@ -9,7 +9,7 @@
 #include "opaygo_decoder_extended.h"
 
 
-int32_t GetActivationValueFromExtendedToken(uint64_t InputToken, uint16_t *LastCount, uint32_t StartingCode, char SECRET_KEY[16]) {
+int32_t GetActivationValueFromExtendedToken(uint64_t InputToken, uint16_t *MaxCount, uint32_t StartingCode, char SECRET_KEY[16]) {
     
     uint32_t StartingCodeBase = GetTokenBaseExtended(StartingCode);
     uint32_t TokenBase = GetTokenBaseExtended(InputToken);
@@ -20,15 +20,15 @@ int32_t GetActivationValueFromExtendedToken(uint64_t InputToken, uint16_t *LastC
     int32_t Value = (int32_t)DecodeBaseExtended(StartingCodeBase, TokenBase);
     
     if(Value == COUNTER_SYNC_VALUE) {
-        MaxCountTry = *LastCount + MAX_TOKEN_JUMP_COUNTER_SYNC;
+        MaxCountTry = *MaxCount + MAX_TOKEN_JUMP_COUNTER_SYNC;
     } else {
-        MaxCountTry = *LastCount + MAX_TOKEN_JUMP;
+        MaxCountTry = *MaxCount + MAX_TOKEN_JUMP;
     }
     
     for (int Count=0; Count <= MaxCountTry; Count++) {
         MaskedToken = PutBaseInTokenExtended(CurrentToken, TokenBase);
-        if(MaskedToken == InputToken && Count > *LastCount) {
-            *LastCount = Count;
+        if(MaskedToken == InputToken && Count > *MaxCount) {
+            *MaxCount = Count;
             return Value;
         }
         CurrentToken = GenerateOPAYGOTokenExtended(CurrentToken, SECRET_KEY);

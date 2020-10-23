@@ -1,6 +1,11 @@
 #ifndef opaygo_core_h
 #define opaygo_core_h
 
+#if (defined(__APPLE__) && defined(__MACH__)) /* MacOS X Framework build */
+    #include <sys/types.h>
+#endif
+
+#include <stdint.h>
 #include <stdio.h>
 
 #define MAX_ACTIVATION_VALUE 995
