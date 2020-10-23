@@ -17,13 +17,16 @@ bool IsInUsedCounts(int Count, uint16_t MaxCount, uint16_t UsedCounts) {
 
 bool IsCountValid(int Count, uint16_t MaxCount, int Value, uint16_t UsedCounts) {
     if(Value == COUNTER_SYNC_VALUE) {
+        // We don't need to check if it's below the max as those tokens aren't tried anyway
         if (Count > MaxCount - MAX_TOKEN_JUMP) {
             return true;
         }
     } else if (Count > MaxCount) {
         return true;
     } else if(MAX_UNUSED_OLDER_TOKENS > 0 && Count != 0) {
+        // We check that the count is in the range for unused older token or above
         if (Count > MaxCount - MAX_UNUSED_OLDER_TOKENS) {
+            // If it is, we check that its ADD_CREDIT and that this count was not used
             if (Count % 2 == 0 && !IsInUsedCounts(Count, MaxCount, UsedCounts)) {
                 return true;
             }
@@ -35,6 +38,7 @@ bool IsCountValid(int Count, uint16_t MaxCount, int Value, uint16_t UsedCounts) 
 void MarkCountAsUsed(int Count, uint16_t *MaxCount, uint16_t *UsedCounts, int Value) {
     uint16_t NewUsedCount = 0;
     if(Count % 2 || Value == COUNTER_SYNC_VALUE) {
+        // If it was a SET_CREDIT token or it was Counter Sync then we mark all past tokens as used
         for(int i=0; i < MAX_UNUSED_OLDER_TOKENS; i++) {
             *UsedCounts = SET_BIT(*UsedCounts, i, 1);
         }
@@ -42,15 +46,18 @@ void MarkCountAsUsed(int Count, uint16_t *MaxCount, uint16_t *UsedCounts, int Va
         if(Count > *MaxCount) {
             uint16_t RelativeCount = Count - *MaxCount;
             if(RelativeCount > MAX_UNUSED_OLDER_TOKENS) {
+                // We cannot mark more tokens as used than the max allowed older tokens
                 RelativeCount = MAX_UNUSED_OLDER_TOKENS;
             } else {
                 NewUsedCount = SET_BIT(NewUsedCount, (RelativeCount-1), 1);
             }
+            // We move all of the tokens marked as used to their new position relative to the new max count
             for(int i=RelativeCount+1; i < MAX_UNUSED_OLDER_TOKENS - RelativeCount; i++) {
                 NewUsedCount = SET_BIT(NewUsedCount, i, CHECK_BIT(*UsedCounts, i-RelativeCount));
             }
             *UsedCounts = NewUsedCount;
         } else {
+            // If the token is older than the max one, we just mark this one as used but don't shift any other tokens
             *UsedCounts = SET_BIT(*UsedCounts, (*MaxCount - Count - 1), 1);
         }
     }

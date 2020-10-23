@@ -3,22 +3,23 @@
 void handleIncomingChar() {
   delay(100); // indispensable to have Serial.available work properly (miscount otherwise)
   char incomingChar = getByteSent();
-  if (incomingChar == '#'){
-      int typeData = getTypeData();
-      if (typeData == SERIAL_NUMBER_TYPE){
-        getByteSent(); // space
-        serialNumber = getSerialNumber();
+  if (incomingChar == '#') {
+      serialNumber = getSerialNumber();
+      Serial.print("\nSN:");
+      Serial.print(serialNumber);
+      startingCode = getStartingCode();
+      Serial.print("\nSC:");
+      Serial.print(startingCode);
+      updateSecretKey(secretKey);
+      Serial.print("\nSK:");
+      for (int i = 0; i < 16; i++) {
+        if (secretKey[i] <= 0x0F) Serial.print("0");
+        Serial.print(secretKey[i], HEX);
       }
-      else if (typeData == STARTING_CODE_TYPE){
-        getByteSent(); // space
-        startingCode = getStartingCode();
-      }
-      else if (typeData == SECRET_KEY_TYPE){ 
-        getByteSent(); // space 
-        updateSecretKey(secretKey);
-      }
-    Serial.flush();  
-    }
+      Serial.println("\n");
+      Serial.flush();
+      setupComplete = SETUP_COMPLETE_MAGIC_NUMBER;
+  }
 }
 
 
@@ -30,32 +31,6 @@ char getByteSent()
   char thisIncomingByte = Serial.read();    // read the incoming byte
   delay(10);
   return(thisIncomingByte);
-}
-
-
-int getTypeData(){
-  /*
-   * Return a different int depending on what it receives after #:
-   * If "SN" => 1
-   * If "SC" => 2
-   * If "SK" => 3
-   * Else => -1
-   */
-  getByteSent();  // no need to read this byte, they all correspons to 'S' (SN, or SC, or SK)
-  
-  char incomingByte = getByteSent();
-  if (incomingByte == 'N'){
-    return(SERIAL_NUMBER_TYPE);
-  }
-  else if (incomingByte == 'C'){
-    return(STARTING_CODE_TYPE);
-  }
-  else if (incomingByte == 'K'){
-    return(SECRET_KEY_TYPE);
-  }
-  else {
-    return(-1);   // error
-  }
 }
 
 
@@ -72,13 +47,14 @@ uint32_t getStartingCode()
     char a = getByteSent();
     codeArray[i] = (int)(a-'0');
   }
+  getByteSent(); // We read the ";" separator
   return(convertArrayToUint32(codeArray));
 }
 
 
 uint32_t getSerialNumber()
 /*
- * get the coming keys until we see a JUMP (Line Feed or '\n') appears.
+ * get the coming keys until we see a ";" character appears.
  * returns the SN as a uint32_t
  */
 {
@@ -86,7 +62,7 @@ uint32_t getSerialNumber()
   int i;
   for (i = 0; i < 9; i++){
     char a = getByteSent();
-    if ((a == '\n') || (a == '\r')){
+    if (a == ';') {
       int j;
       for (j = 8; j > 8-i; j--){ // in case we spot a JUMP and the SN is less than 9 digits , we make sure it is pushed to the right of the tab
         codeArray[j] = codeArray[i+j-9];
@@ -116,30 +92,9 @@ int updateSecretKey(unsigned char secretKey[16])
   for (i = 0; i < 16; i++){
     char char1 = getByteSent();
     char char2 = getByteSent();
-    if (char2 == ' '){
-      secretKey[i] = (unsigned char)strtol(&char1, NULL, 16);
-    }
-    else{
-      int sum = 16*(unsigned char)strtol(&char1, NULL, 16) + (unsigned char)strtol(&char2, NULL, 16); // convert the text into the proper int
-      secretKey[i] = sum;
-      getByteSent(); // space
-    }
+    int sum = 16*(unsigned char)strtol(&char1, NULL, 16) + (unsigned char)strtol(&char2, NULL, 16); // convert the text into the proper int
+    secretKey[i] = sum;
     delay(100);
   }
   return 0;
-}
-
-
-int isSecretKeyInitialized(unsigned char tab[16])
-/*
- * returns 1 if initialized (all chars at 0), 0 otherwise
- */
-{
-  int k;
-  for (k = 0; k < 16; k ++){
-    if (tab[k] != 0){
-      return(0);
-    }
-  }
-  return(1);
 }

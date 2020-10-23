@@ -22,7 +22,6 @@ char getKeyPressed()
  */
 {
   char incomingByte = Serial.read();    // read the incoming byte
-  Serial.print("incoming byte = ");
   Serial.println(incomingByte);
   if (isAccepted(incomingByte)){
     return(incomingByte);

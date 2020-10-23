@@ -16,6 +16,8 @@ void handleActivationTime(){
   
   if (isActive() == 0){
     digitalWrite(PIN_ACTIVATION, LOW);
+  } else {
+    digitalWrite(PIN_ACTIVATION, HIGH);
   }
 }
 

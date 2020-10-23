@@ -34,25 +34,30 @@ please make sure to update to the latest version before using in production.
 
 ## Changelog
 
-2020-09-17: v2.1 release
-- Updated the examples to add the unordered token entry feature that was introduced with v2.1 on 2019-11-15 as part of the main repository. 
+2020-10-23: v2.1.1 release
+- Improved factory setup for Arduino example (compatible with the factory setup tools of the other repository)
+- Improved general structure of Arduino project
+
+2020-09-17: v2.1.0 release
+- Updated the examples to add the unordered token entry feature that was introduced with v2.1 on 2019-11-15 as part of the main repository 
 - Fixed compatibility with OSX for the Neutral C Implementation
 - Included Makefile in the Neutral C Implementation for ease of use (thanks @martinjaeger)
+- Fixed issue in Arduino example were token type was not properly taken into account
 
-2019-09-09: v2.0 release
+2019-09-09: v2.0.0 release
 - Updated example Arduino code documentation
 - Fixed a bug in the neutral device example implementation that would prevent the value of the counter to be stored immediately after a counter sync call. 
 - Changed the min. Token jump to match the value recommended in the documentation.
 - Small refactor for clarity in the Arduino implementation
 
-2019-09-24: v2.0 rc2
+2019-09-24: v2.0.0 rc2
 - Added the first verison of the Arduino implementation
 
-2019-09-18: v2.0 rc1
+2019-09-18: v2.0.0 rc1
 - Added extended token example implementation
 
-2019-08-29: v2.0 beta
+2019-08-29: v2.0.0 beta
 - Fully functional version with all core v2.0 features
 
-2019-06-29: v2.0 alpha
+2019-06-29: v2.0.0 alpha
 - First functional pre-release version
