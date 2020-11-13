@@ -9,7 +9,7 @@ bool IsInUsedCounts(int Count, uint16_t MaxCount, uint16_t UsedCounts) {
     if(Count % 2 && Count <= MaxCount) {
         return true;
     }
-    if(CHECK_BIT(UsedCounts, RelativeCount)) {
+    if(CHECK_BIT(UsedCounts, RelativeCount) || Count == MaxCount) {
         return true;
     }
     return false;
