@@ -34,6 +34,9 @@ please make sure to update to the latest version before using in production.
 
 ## Changelog
 
+2020-11-13: v2.1.2 release
+- Fixes issue with unordered token entry in example implementation
+
 2020-10-23: v2.1.1 release
 - Improved factory setup for Arduino example (compatible with the factory setup tools of the other repository)
 - Improved general structure of Arduino project
