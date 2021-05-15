@@ -6,6 +6,7 @@
 #include "device_payg_logic.h"
 #include "opaygo_decoder/opaygo_decoder.h"
 
+
 uint64_t WaitForTokenEntry() {
     uint64_t TempToken = 0;
     bool NoToken = true;
@@ -61,7 +62,9 @@ int main(int argc, const char * argv[]) {
         #ifdef DEBUG
         printf("\n(Token entered: %llu)", InputToken);
         printf("\n(Activation Value from Token: %d)", Output.Value); // Activation Value found in the token
-        printf("\n(Count: %d)\n", Output.Count); // Count found in the token
+        printf("\n(Count: %d)", Output.Count); // Count found in the token
+        printf("\n(Max Count: %d)", TokenCount); // Count found in the token
+        printf("\n(Used Tokens: %d)\n", UsedTokens); // Count found in the token
         #endif
         
         // We update the PAYG mode (ON or OFF) and the PAYG timer based on the activation value
@@ -70,4 +73,3 @@ int main(int argc, const char * argv[]) {
     
     return 0;
 }
-

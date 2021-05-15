@@ -37,7 +37,7 @@ bool IsCountValid(int Count, uint16_t MaxCount, int Value, uint16_t UsedCounts) 
 
 void MarkCountAsUsed(int Count, uint16_t *MaxCount, uint16_t *UsedCounts, int Value) {
     uint16_t NewUsedCount = 0;
-    if(Count % 2 || Value == COUNTER_SYNC_VALUE) {
+    if(Count % 2 || Value == COUNTER_SYNC_VALUE || Value == PAYG_DISABLE_VALUE) {
         // If it was a SET_CREDIT token or it was Counter Sync then we mark all past tokens as used
         for(int i=0; i < MAX_UNUSED_OLDER_TOKENS; i++) {
             *UsedCounts = SET_BIT(*UsedCounts, i, 1);
@@ -80,6 +80,7 @@ TokenData GetDataFromToken(uint64_t InputToken, uint16_t *MaxCount, uint16_t *Us
     int MinCountTry;
     int Value = DecodeBase(StartingCodeBase, TokenBase);
     TokenData output;
+    bool ValidOlderToken = false;
 
     if(Value == COUNTER_SYNC_VALUE) {
         MaxCountTry = *MaxCount + MAX_TOKEN_JUMP_COUNTER_SYNC;
@@ -95,11 +96,17 @@ TokenData GetDataFromToken(uint64_t InputToken, uint16_t *MaxCount, uint16_t *Us
                 output.Value = Value;
                 output.Count = Count;
                 return output;
+            } else {
+                ValidOlderToken = true;
             }
         }
         CurrentToken = GenerateOPAYGOToken(CurrentToken, SECRET_KEY);
     }
-    output.Value = -1;
+    if(ValidOlderToken) {
+        output.Value = -2;
+    } else {
+        output.Value = -1;
+    }
     output.Count = *MaxCount;
     return output;
 }

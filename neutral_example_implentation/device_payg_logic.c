@@ -6,6 +6,9 @@ void UpdateDeviceStatusFromTokenValue(int TokenValue, int ActivationCount) {
     if(TokenValue == -1) {
         InvalidTokenCount++;
         UpdateInvalidTokenWaitingPeriod();
+        BlinkRedLED(10);
+    } else if(TokenValue == -2) {
+        BlinkGreenLED(1); // We blink the green LED once to show that the token was valid but isnt anymore
     } else {
         InvalidTokenCount = 0;
         if(TokenValue == COUNTER_SYNC_VALUE) {
@@ -14,8 +17,8 @@ void UpdateDeviceStatusFromTokenValue(int TokenValue, int ActivationCount) {
             PAYGEnabled = false;
             BlinkGreenLED(5); // We blink green twice to show that the device is active forever
         } else {
-            PAYGEnabled = true;
             if(ActivationCount % 2) {
+                PAYGEnabled = true;
                 SetTime(TokenValue);
             } else {
                 AddTime(TokenValue);

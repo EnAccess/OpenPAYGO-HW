@@ -34,6 +34,13 @@ please make sure to update to the latest version before using in production.
 
 ## Changelog
 
+2021-05-04: v2.1.4 release
+- Clarify ambiguity about the re-enabling of PAYG
+- Ensured the example implementations used the recommended values
+
+2021-03-04: v2.1.3 release
+- Fixes issue with unordered token entry in example implementation
+
 2020-11-13: v2.1.2 release
 - Fixes issue with unordered token entry in example implementation
 
