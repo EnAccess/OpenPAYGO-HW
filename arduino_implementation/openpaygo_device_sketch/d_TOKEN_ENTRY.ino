@@ -50,6 +50,8 @@ void handleIncomingKeypress() {
 void UpdateDeviceStatusFromTokenValue(int TokenValue, int ActivationCount) {
     if(TokenValue == -1) {
         blinkLed(15);
+    } else if(TokenValue == -2) {
+        blinkLed(2); // We blink the LED twice to show that its valid but old
     } else {
         if(TokenValue == COUNTER_SYNC_VALUE) {
             blinkLed(3); // We blink green twice to show that the token is good
@@ -57,8 +59,8 @@ void UpdateDeviceStatusFromTokenValue(int TokenValue, int ActivationCount) {
             paygDisabled = 1;
             blinkLed(5);
         } else {
-            paygDisabled = 0;
             if(ActivationCount % 2) {
+                paygDisabled = 0;
                 setTime(TokenValue);
             } else {
                 addTime(TokenValue);
