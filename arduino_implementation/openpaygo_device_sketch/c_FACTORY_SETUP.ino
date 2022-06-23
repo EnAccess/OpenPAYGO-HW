@@ -77,6 +77,9 @@ uint32_t getSerialNumber()
       codeArray[i] = (int)(a-'0');
     }
   }
+  if (i == 9) { // Make sure we read the ';' after the serial number
+    getByteSent();
+  }
   return(convertArrayToUint32(codeArray));
 }
 
