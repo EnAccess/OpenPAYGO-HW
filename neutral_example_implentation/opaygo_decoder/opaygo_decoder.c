@@ -1,6 +1,6 @@
 #include "opaygo_decoder.h"
 
-#define CHECK_BIT(variable, position) ((variable) & (1<<(position)))
+#define CHECK_BIT(variable, position) (((variable) >> (position)) & 1)
 #define SET_BIT(variable,position,value) (variable & ~(1<<position)) | (value<<position)
 
 
@@ -18,14 +18,14 @@ bool IsInUsedCounts(int Count, uint16_t MaxCount, uint16_t UsedCounts) {
 bool IsCountValid(int Count, uint16_t MaxCount, int Value, uint16_t UsedCounts) {
     if(Value == COUNTER_SYNC_VALUE) {
         // We don't need to check if it's below the max as those tokens aren't tried anyway
-        if (Count > MaxCount - MAX_TOKEN_JUMP) {
+        if (Count >= MaxCount - MAX_UNUSED_OLDER_TOKENS_COUNTER_SYNC) {
             return true;
         }
     } else if (Count > MaxCount) {
         return true;
     } else if(MAX_UNUSED_OLDER_TOKENS > 0 && Count != 0) {
         // We check that the count is in the range for unused older token or above
-        if (Count > MaxCount - MAX_UNUSED_OLDER_TOKENS) {
+        if (Count >= MaxCount - MAX_UNUSED_OLDER_TOKENS) {
             // If it is, we check that its ADD_CREDIT and that this count was not used
             if (Count % 2 == 0 && !IsInUsedCounts(Count, MaxCount, UsedCounts)) {
                 return true;
@@ -52,7 +52,7 @@ void MarkCountAsUsed(int Count, uint16_t *MaxCount, uint16_t *UsedCounts, int Va
                 NewUsedCount = SET_BIT(NewUsedCount, (RelativeCount-1), 1);
             }
             // We move all of the tokens marked as used to their new position relative to the new max count
-            for(int i=RelativeCount+1; i < MAX_UNUSED_OLDER_TOKENS - RelativeCount; i++) {
+            for(uint16_t i=RelativeCount; i < MAX_UNUSED_OLDER_TOKENS; i++) {
                 NewUsedCount = SET_BIT(NewUsedCount, i, CHECK_BIT(*UsedCounts, i-RelativeCount));
             }
             *UsedCounts = NewUsedCount;
@@ -77,7 +77,6 @@ TokenData GetDataFromToken(uint64_t InputToken, uint16_t *MaxCount, uint16_t *Us
     uint32_t CurrentToken = PutBaseInToken(StartingCode, TokenBase);
     uint32_t MaskedToken;
     int MaxCountTry;
-    int MinCountTry;
     int Value = DecodeBase(StartingCodeBase, TokenBase);
     TokenData output;
     bool ValidOlderToken = false;
