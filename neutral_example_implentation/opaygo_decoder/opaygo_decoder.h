@@ -14,6 +14,7 @@
 #define MAX_TOKEN_JUMP 64 // This is a jump in count so up to twice as large as the number of tokens of the same type
 #define MAX_TOKEN_JUMP_COUNTER_SYNC 100 // This is a jump in count so up to twice as large as the number of tokens
 #define MAX_UNUSED_OLDER_TOKENS 16 // Maximum of 16 (8 tokens of the same type)
+#define MAX_UNUSED_OLDER_TOKENS_COUNTER_SYNC 30 // Maximum of 30 counts older is allowed for counter sync
 
 struct TokenDataStruct {
     int Value;
