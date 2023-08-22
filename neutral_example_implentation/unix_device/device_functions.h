@@ -21,7 +21,7 @@ extern uint16_t UsedTokens;
 extern bool PAYGEnabled;
 extern uint32_t ActiveUntil;
 extern uint32_t TokenEntryLockedUntil;
-extern char SECRET_KEY[16];
+extern unsigned char SECRET_KEY[16];
 extern uint32_t StartingCode;
 
 void BlinkRedLED(int NumberOfBlinks);
