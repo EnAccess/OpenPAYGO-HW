@@ -15,5 +15,8 @@ all: opaygo.bin
 opaygo.bin: $(OBJ)
 	$(CC) $^ $(LIBS) -o $@
 
+check: $(OBJ)
+	$(CC) -Werror $^ $(LIBS) -o /dev/null
+
 clean:
 	@rm -f opaygo.bin
