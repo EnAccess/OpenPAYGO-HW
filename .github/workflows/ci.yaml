@@ -32,5 +32,5 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Compile
-        working-directory: neutral_example_implementation
+        working-directory: neutral_example_implentation
         run: make check
