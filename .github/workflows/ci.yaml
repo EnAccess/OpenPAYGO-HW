@@ -1,0 +1,36 @@
+name: OpenPAGO-HW
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+#   clang-format:
+#     name: Lint clang-format
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v3
+#       - name: Run clang-format lint
+#         run: find include/ src/ \( -name '*.[ch]pp' -o -name '*.h' \) | xargs clang-format --verbose --style=file -n --Werror
+
+#   editorconfig-checker:
+#     name: Lint EditorConfig
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v3
+#       - run: pipx install "editorconfig-checker"
+#       - name: Run editorconfig-checker
+#         run: ec
+
+  check-compiler-warnings:
+    name: Check compiler warnings
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Compile
+        working-directory: neutral_example_implentation
+        run: make check
