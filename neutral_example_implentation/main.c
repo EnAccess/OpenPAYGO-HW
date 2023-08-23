@@ -60,7 +60,7 @@ int main(int argc, const char * argv[]) {
         Output = GetDataFromToken(InputToken, &TokenCount, &UsedTokens, StartingCode, SECRET_KEY);
 
         #ifdef DEBUG
-        printf("\n(Token entered: %llu)", InputToken);
+        printf("\n(Token entered: %lu)", InputToken);
         printf("\n(Activation Value from Token: %d)", Output.Value); // Activation Value found in the token
         printf("\n(Count: %d)", Output.Count); // Count found in the token
         printf("\n(Max Count: %d)", TokenCount); // Count found in the token
