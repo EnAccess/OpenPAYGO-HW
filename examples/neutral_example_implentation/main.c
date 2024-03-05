@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
+#include <opaygo_decoder.h>
 #include "device_parameters.h"
 #include "unix_device/device_functions.h"
 #include "device_payg_logic.h"
-#include "opaygo_decoder/opaygo_decoder.h"
 
 
 uint64_t WaitForTokenEntry() {
