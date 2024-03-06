@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
+#include <opaygo_decoder.h>
 #include "device_parameters.h"
 #include "unix_device/device_functions.h"
 #include "device_payg_logic.h"
-#include "opaygo_decoder/opaygo_decoder.h"
 
 
 uint64_t WaitForTokenEntry() {
@@ -60,7 +60,7 @@ int main(int argc, const char * argv[]) {
         Output = GetDataFromToken(InputToken, &TokenCount, &UsedTokens, StartingCode, SECRET_KEY);
 
         #ifdef DEBUG
-        printf("\n(Token entered: %lu)", InputToken);
+        printf("\n(Token entered: %llu)", (unsigned long long)InputToken);
         printf("\n(Activation Value from Token: %d)", Output.Value); // Activation Value found in the token
         printf("\n(Count: %d)", Output.Count); // Count found in the token
         printf("\n(Max Count: %d)", TokenCount); // Count found in the token
